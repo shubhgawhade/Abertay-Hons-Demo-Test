@@ -70,7 +70,7 @@ public class Outline : MonoBehaviour {
   private Material outlineMaskMaterial;
   private Material outlineFillMaterial;
 
-  private bool needsUpdate;
+  public bool needsUpdate;
 
   void Awake() {
 
@@ -127,12 +127,6 @@ public class Outline : MonoBehaviour {
       needsUpdate = false;
 
       UpdateMaterialProperties();
-    }
-    
-    if(Input.GetMouseButtonDown(0))
-    {
-      outlineMode = Mode.OutlineAll;
-      needsUpdate = true;
     }
   }
 
@@ -257,7 +251,7 @@ public class Outline : MonoBehaviour {
       case Mode.OutlineHidden:
         outlineMaskMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
         outlineFillMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Greater);
-        outlineFillMaterial.SetFloat("_OutlineWidth", outlineWidth);
+        outlineFillMaterial.SetFloat("_OutlineWidth", 0);
         break;
 
       case Mode.OutlineAndSilhouette:

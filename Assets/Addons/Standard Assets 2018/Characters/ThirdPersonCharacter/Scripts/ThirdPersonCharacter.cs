@@ -9,21 +9,11 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 	[RequireComponent(typeof(Animator))]
 	public class ThirdPersonCharacter : MonoBehaviour
 	{
-		[SerializeField] private SkinnedMeshRenderer Leye;
-		[SerializeField] private SkinnedMeshRenderer Reye;
-		[SerializeField] private Material redEyes;
-		private Material oldMat;
-		
-		[SerializeField] private GameObject player;
-		[SerializeField] private GameObject spotLight;
-		private SpotlightController slc;
-
 		public float maxPlayerDistance;
 		public float chargeDistance;
 		public float attackDistance;
 		
 		public bool detected;
-		public bool ded;
 		
 		[SerializeField] float m_MovingTurnSpeed = 360;
 		[SerializeField] float m_StationaryTurnSpeed = 180;

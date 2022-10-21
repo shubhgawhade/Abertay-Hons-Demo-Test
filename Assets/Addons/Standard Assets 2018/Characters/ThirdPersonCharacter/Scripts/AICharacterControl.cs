@@ -1,32 +1,25 @@
-using System;
-using System.Collections;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using UnityEngine.AI;
 
 namespace UnityStandardAssets.Characters.ThirdPerson
 {
-    [RequireComponent(typeof (UnityEngine.AI.NavMeshAgent))]
+    
+    [RequireComponent(typeof (NavMeshAgent))]
     [RequireComponent(typeof (ThirdPersonCharacter))]
     public class AICharacterControl : MonoBehaviour
     {
-        [SerializeField] private GameObject aiController;
-
-
-        private Animator anim;
-        
-        public UnityEngine.AI.NavMeshAgent agent { get; private set; }             // the navmesh agent required for the path finding
+        [SerializeField] private GameObject cursorObj;
+        public NavMeshAgent agent { get; private set; }             // the navmesh agent required for the path finding
         public ThirdPersonCharacter character { get; private set; } // the character we are controlling
-        public Transform target;                                    // target to aim for
+        public Vector3 target;                                    // target to aim for
 
         private bool cooldown;
-        
+        private RaycastHit hit;
         private void Start()
         {
-            anim = GetComponent<Animator>();
-
             // get the components on the object we need ( should not be null due to require component so no need to check )
             // agent = GetComponentInChildren<UnityEngine.AI.NavMeshAgent>();
-            agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+            agent = GetComponent<NavMeshAgent>();
             character = GetComponent<ThirdPersonCharacter>();
 
 	        agent.updateRotation = false;
@@ -36,8 +29,43 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
         private void Update()
         {
-            agent.SetDestination(target.position);
-            character.Move(agent.desiredVelocity, false, false);
+            if (target == Vector3.zero)
+            {
+                target = transform.position;
+            }
+            
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray, out hit) && Input.GetMouseButtonDown(0) )
+            {
+                switch (hit.collider.tag)
+                {
+                    case "Ground":
+                        target = new Vector3(hit.point.x, 0, hit.point.z);
+                        agent.SetDestination(target);
+                        break;
+                    
+                    case "Interactable":
+                        print("INTERACTED WITH" + hit.collider.name);
+                        break;
+                }
+                
+                if (hit.collider.CompareTag("Ground"))
+                {
+                }
+            }
+                print(agent.isStopped);
+            
+            if (agent.remainingDistance > 0.3f)
+            {
+                print(Mathf.Abs((transform.position - target).magnitude));
+                character.Move(agent.desiredVelocity, false, false);
+            }
+            else
+            {
+                // cursorObj.transform.position = new Vector3(hit.point.x, 0, hit.point.z);
+            }
         }
     }
 }
