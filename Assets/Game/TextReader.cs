@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -7,7 +6,8 @@ using UnityEngine;
 public class TextReader : MonoBehaviour
 {
     // Create variables if player is already in conversation with someone or examining
-    
+
+    [SerializeField] private GameObject ui;
     [SerializeField] private TextMeshProUGUI dialogueText;
     
     
@@ -25,22 +25,21 @@ public class TextReader : MonoBehaviour
     {
         //USE LOAD ASYNC
         //Call from another script when player is in proximity of someone who has a dialogue
-        ta = Resources.Load<TextAsset>("a");
+        // ta = Resources.Load<TextAsset>("a");
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        text = ta.text;
-        strB = new StringBuilder(ta.text);
-        // text = strB.ToString();
-        lines = strB.ToString().Split("\n");
+        // text = ta.text;
+        // strB = new StringBuilder(ta.text);
+        // // text = strB.ToString();
+        // lines = strB.ToString().Split("\n");
     }
 
     // Update is called once per frame
     void Update()
     {
-            
         if (nextDialogue)
         {
             for(int i = dialogueTracker; i < lines.Length; i++)
@@ -75,6 +74,20 @@ public class TextReader : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ToggleUI()
+    {
+        text = ta.text;
+        strB = new StringBuilder(ta.text);
+        // text = strB.ToString();
+        lines = strB.ToString().Split("\n");
         
+        ui.SetActive(!ui.activeSelf);
+    }
+
+    public void NextDialogue()
+    {
+        nextDialogue = true;
     }
 }
